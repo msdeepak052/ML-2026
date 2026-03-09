@@ -558,5 +558,3 @@ Example tasks:
 
 ---
 
-
-Send the next topic and we’ll break it down **deeply like this.** 🚀
