@@ -1,0 +1,468 @@
+# Named Entity Recognition (NER)
+
+Named Entity Recognition (NER) is an **important NLP task** used to identify and classify important entities in text such as **people, organizations, locations, dates, etc.**
+
+We’ll go step-by-step with **simple explanations, examples, and Python using NLTK**.
+
+---
+
+# 1. What is Named Entity Recognition (NER)?
+
+**Named Entity Recognition (NER)** is the process of detecting **important real-world objects (entities)** in text and classifying them into predefined categories.
+
+Example sentence:
+
+```text
+"Elon Musk founded Tesla in California in 2003"
+```
+
+NER result:
+
+| Word       | Entity Type  |
+| ---------- | ------------ |
+| Elon Musk  | PERSON       |
+| Tesla      | ORGANIZATION |
+| California | LOCATION     |
+| 2003       | DATE         |
+
+So the system identifies **who, where, when, and what**.
+
+---
+
+# 2. Why NER is Important
+
+NER helps machines extract **structured information from unstructured text**.
+
+Example text:
+
+```text
+"Apple was founded by Steve Jobs in California."
+```
+
+NER extracts:
+
+| Entity     | Type         |
+| ---------- | ------------ |
+| Apple      | Organization |
+| Steve Jobs | Person       |
+| California | Location     |
+
+Applications:
+
+* Search engines
+* Chatbots
+* News analysis
+* Information extraction
+* Question answering
+* Knowledge graphs
+
+---
+
+# 3. Common Named Entity Types
+
+| Entity       | Meaning                                 |
+| ------------ | --------------------------------------- |
+| PERSON       | names of people                         |
+| ORGANIZATION | companies, institutions                 |
+| LOCATION     | places                                  |
+| DATE         | date or time                            |
+| MONEY        | currency values                         |
+| GPE          | geopolitical entity (countries, cities) |
+
+Example:
+
+```text
+"Google was founded in 1998 in the USA"
+```
+
+Entities:
+
+| Word   | Type         |
+| ------ | ------------ |
+| Google | Organization |
+| 1998   | Date         |
+| USA    | Location     |
+
+---
+
+# 4. NER in NLP Pipeline
+
+Typical NLP pipeline:
+
+```
+Raw Text
+↓
+Tokenization
+↓
+POS Tagging
+↓
+Named Entity Recognition
+↓
+Information Extraction
+```
+
+Example:
+
+```
+"Barack Obama was born in Hawaii"
+```
+
+NER result:
+
+```
+Barack Obama → PERSON
+Hawaii → LOCATION
+```
+
+---
+
+# 5. Installing Required NLTK Data
+
+Run once:
+
+```python
+import nltk
+
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+```
+
+These datasets are required for **NER in NLTK**.
+
+---
+
+# 6. Basic NER Example in Python
+
+Sentence:
+
+```
+"Barack Obama was born in Hawaii"
+```
+
+### Python Code
+
+```python
+import nltk
+from nltk.tokenize import word_tokenize
+
+sentence = "Barack Obama was born in Hawaii"
+
+words = word_tokenize(sentence)
+
+pos_tags = nltk.pos_tag(words)
+
+named_entities = nltk.ne_chunk(pos_tags)
+
+print(named_entities)
+```
+
+Output (tree format):
+
+```
+(S
+ (PERSON Barack/NNP Obama/NNP)
+ was/VBD
+ born/VBN
+ in/IN
+ (GPE Hawaii/NNP))
+```
+
+Meaning:
+
+| Entity       | Type           |
+| ------------ | -------------- |
+| Barack Obama | PERSON         |
+| Hawaii       | GPE (Location) |
+
+---
+
+# 7. Example with Multiple Entities
+
+Sentence:
+
+```
+"Elon Musk founded Tesla in California"
+```
+
+### Code
+
+```python
+import nltk
+from nltk.tokenize import word_tokenize
+
+sentence = "Elon Musk founded Tesla in California"
+
+words = word_tokenize(sentence)
+
+pos_tags = nltk.pos_tag(words)
+
+entities = nltk.ne_chunk(pos_tags)
+
+print(entities)
+```
+
+Output:
+
+```
+(S
+ (PERSON Elon/NNP Musk/NNP)
+ founded/VBD
+ (ORGANIZATION Tesla/NNP)
+ in/IN
+ (GPE California/NNP))
+```
+
+Entities identified:
+
+| Entity     | Type         |
+| ---------- | ------------ |
+| Elon Musk  | PERSON       |
+| Tesla      | ORGANIZATION |
+| California | LOCATION     |
+
+---
+
+# 8. Visualizing Named Entities
+
+NER output is a **tree structure**.
+
+Example:
+
+```
+(S
+ (PERSON Elon Musk)
+ founded
+ (ORGANIZATION Tesla)
+ in
+ (GPE California)
+)
+```
+
+Meaning:
+
+```
+Sentence
+├── PERSON → Elon Musk
+├── ORGANIZATION → Tesla
+└── LOCATION → California
+```
+
+---
+
+# 9. NER Example with Date
+
+Sentence:
+
+```
+"Microsoft was founded by Bill Gates in 1975."
+```
+
+### Code
+
+```python
+import nltk
+from nltk.tokenize import word_tokenize
+
+sentence = "Microsoft was founded by Bill Gates in 1975."
+
+words = word_tokenize(sentence)
+
+pos_tags = nltk.pos_tag(words)
+
+entities = nltk.ne_chunk(pos_tags)
+
+print(entities)
+```
+
+Expected entities:
+
+| Entity     | Type         |
+| ---------- | ------------ |
+| Microsoft  | Organization |
+| Bill Gates | Person       |
+| 1975       | Date         |
+
+---
+
+# 10. Step-by-Step NER Process
+
+Example text:
+
+```
+"Amazon CEO Andy Jassy works in Seattle"
+```
+
+Step 1 — Tokenization
+
+```
+['Amazon','CEO','Andy','Jassy','works','in','Seattle']
+```
+
+Step 2 — POS Tagging
+
+```
+Amazon → NNP
+CEO → NNP
+Andy → NNP
+Jassy → NNP
+works → VBZ
+Seattle → NNP
+```
+
+Step 3 — NER
+
+```
+Amazon → ORGANIZATION
+Andy Jassy → PERSON
+Seattle → LOCATION
+```
+
+---
+
+# 11. Practical Example (Paragraph)
+
+Text:
+
+```
+"Google was founded by Larry Page and Sergey Brin at Stanford University."
+```
+
+### Code
+
+```python
+import nltk
+from nltk.tokenize import word_tokenize
+
+text = "Google was founded by Larry Page and Sergey Brin at Stanford University."
+
+words = word_tokenize(text)
+
+pos_tags = nltk.pos_tag(words)
+
+entities = nltk.ne_chunk(pos_tags)
+
+print(entities)
+```
+
+Entities extracted:
+
+| Entity              | Type         |
+| ------------------- | ------------ |
+| Google              | Organization |
+| Larry Page          | Person       |
+| Sergey Brin         | Person       |
+| Stanford University | Organization |
+
+---
+
+# 12. Limitations of NLTK NER
+
+NLTK NER is **rule-based and traditional**.
+
+Problems:
+
+* limited entity types
+* lower accuracy
+* struggles with complex sentences
+
+Example:
+
+```
+"OpenAI released ChatGPT"
+```
+
+It may not correctly identify **OpenAI** or **ChatGPT**.
+
+Modern NLP libraries perform better.
+
+Examples:
+
+* spaCy
+* HuggingFace Transformers
+* BERT NER models
+
+---
+
+# 13. Real-World Use Cases
+
+NER is used in:
+
+### News Analysis
+
+Extract people, places, organizations.
+
+Example:
+
+```
+"Prime Minister Narendra Modi visited the USA."
+```
+
+### Resume Parsing
+
+Extract:
+
+* name
+* skills
+* company names
+
+### Financial Analysis
+
+```
+"Tesla stock rose 5% on Monday"
+```
+
+Extract:
+
+* Tesla → company
+* Monday → date
+
+---
+
+# 14. Summary
+
+| Concept       | Meaning                               |
+| ------------- | ------------------------------------- |
+| NER           | identifies important entities in text |
+| Input         | tokenized sentence                    |
+| Output        | entities with categories              |
+| NLTK function | `nltk.ne_chunk()`                     |
+
+Example:
+
+Sentence:
+
+```
+"Elon Musk founded Tesla"
+```
+
+NER output:
+
+```
+Elon Musk → PERSON
+Tesla → ORGANIZATION
+```
+
+---
+
+# 15. Practice Example
+
+Try this sentence:
+
+```
+"Tim Cook is the CEO of Apple and lives in California."
+```
+
+Expected entities:
+
+| Entity     | Type         |
+| ---------- | ------------ |
+| Tim Cook   | Person       |
+| Apple      | Organization |
+| California | Location     |
+
+---
+
+
+
